@@ -1,5 +1,6 @@
 package com.pasukanlangit.id.unittesttdd.repositories
 
+import androidx.lifecycle.LiveData
 import com.pasukanlangit.id.unittesttdd.data.local.DogDao
 import com.pasukanlangit.id.unittesttdd.data.remote.DogApi
 import com.pasukanlangit.id.unittesttdd.data.remote.model.DogResponse
@@ -18,6 +19,8 @@ class DogRepositoryImpl @Inject constructor(
     override suspend fun deleteDogItem(dogResponse: DogResponse) {
         dogDao.deleteDog(dogResponse)
     }
+
+    override fun observableDogItems(): LiveData<List<DogResponse>> = dogDao.getAllDog()
 
     override suspend fun getDogItem(): Resource<DogResponse> {
         return try {

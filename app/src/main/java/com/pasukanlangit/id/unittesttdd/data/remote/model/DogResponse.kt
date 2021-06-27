@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 data class DogResponse(
 
 	@PrimaryKey(autoGenerate = true)
-	val id: Int,
+	val id: Int ?= null,
 
 	@field:SerializedName("message")
 	val data: List<String>,

@@ -2,8 +2,11 @@ package com.pasukanlangit.id.unittesttdd.di
 
 import android.content.Context
 import androidx.room.Room
+import com.pasukanlangit.id.unittesttdd.data.local.DogDao
 import com.pasukanlangit.id.unittesttdd.data.local.MyDatabase
 import com.pasukanlangit.id.unittesttdd.data.remote.DogApi
+import com.pasukanlangit.id.unittesttdd.repositories.DogRepository
+import com.pasukanlangit.id.unittesttdd.repositories.DogRepositoryImpl
 import com.pasukanlangit.id.unittesttdd.utils.Constant
 import dagger.Module
 import dagger.Provides
@@ -46,4 +49,7 @@ object AppModule {
     @Singleton
     fun provideDogApi(retrofit: Retrofit) = retrofit.create(DogApi::class.java)
 
+    @Provides
+    @Singleton
+    fun provideRepository(dogDao: DogDao, dogApi: DogApi) : DogRepository = DogRepositoryImpl(dogDao, dogApi)
 }
