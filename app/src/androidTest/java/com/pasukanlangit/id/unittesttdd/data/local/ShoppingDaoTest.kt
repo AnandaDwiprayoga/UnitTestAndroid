@@ -23,14 +23,14 @@ class ShoppingDaoTest {
     @get:Rule
     var instantTaskExecuteRule = InstantTaskExecutorRule()
 
-    private lateinit var database: ShoppingItemDb
+    private lateinit var database: MyDatabase
     private lateinit var shoppingDao : ShoppingDao
 
     @Before
     fun setUp(){
         database = Room.inMemoryDatabaseBuilder(
                 ApplicationProvider.getApplicationContext(),
-                ShoppingItemDb::class.java
+                MyDatabase::class.java
         ).allowMainThreadQueries().build()
         shoppingDao = database.shoppingDao()
     }
@@ -42,7 +42,7 @@ class ShoppingDaoTest {
 
     @Test
     fun insertShoppingTest() = runBlockingTest {
-        val shoppingItem = ShoppingItem("",1,2000f,"")
+        val shoppingItem = ShoppingItem("",1,2000f,"", 1)
         shoppingDao.insertShoppingItem(shoppingItem)
 
         val allShoppingItems = shoppingDao.observeAllShoppingItems().getOrAwaitValue()
@@ -51,11 +51,30 @@ class ShoppingDaoTest {
 
     @Test
     fun deleteShoppingItem() = runBlockingTest {
-        val shoppingItem = ShoppingItem("",1,2000f,"")
+        val shoppingItem = ShoppingItem("",1,2000f,"",1)
         shoppingDao.insertShoppingItem(shoppingItem)
         shoppingDao.deleteShoppingItem(shoppingItem)
 
         val allShoppingItems = shoppingDao.observeAllShoppingItems().getOrAwaitValue()
         assertThat(allShoppingItems).doesNotContain(shoppingItem)
     }
+
+    @Test
+    fun observeTotalPriceSum() = runBlockingTest {
+        val shoppingItem1 = ShoppingItem("",2,2000f,"",1)
+        val shoppingItem2 = ShoppingItem("",4,2000f,"",2)
+        val shoppingItem3 = ShoppingItem("",3,2000f,"",3)
+
+        shoppingDao.insertShoppingItem(shoppingItem1)
+        shoppingDao.insertShoppingItem(shoppingItem2)
+        shoppingDao.insertShoppingItem(shoppingItem3)
+
+        val totalPriceSum = shoppingDao.observeTotalPrice().getOrAwaitValue()
+        assertThat(totalPriceSum).isEqualTo(calculatePrice(shoppingItem1) + calculatePrice(shoppingItem2) + calculatePrice(shoppingItem3))
+
+    }
+
+    private fun calculatePrice(shoppingItem: ShoppingItem): Float = shoppingItem.amount * shoppingItem.price
+
+
 }
