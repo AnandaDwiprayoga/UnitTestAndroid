@@ -1,11 +1,10 @@
 package com.pasukanlangit.id.unittesttdd.data.local
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
+import com.pasukanlangit.id.unittesttdd.launchFragmentInHiltContainer
+import com.pasukanlangit.id.unittesttdd.ui.DogFragment
 import com.pasukanlangit.id.unittesttdd.utils.getOrAwaitValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -15,7 +14,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -45,6 +43,11 @@ class ShoppingDaoTest {
     @After
     fun tearDown(){
        database.close()
+    }
+
+    @Test
+    fun testLaunchFragmentInHiltContainer(){
+        launchFragmentInHiltContainer<DogFragment> {  }
     }
 
     @Test
